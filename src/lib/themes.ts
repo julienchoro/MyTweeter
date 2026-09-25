@@ -36,6 +36,46 @@ export const PRESETS: ThemePreset[] = [
     id: 'dracula', name: 'Dracula', scheme: 'dark',
     colors: { bg: '#282a36', text: '#f8f8f2', muted: '#8f98c4', border: '#44475a', accent: '#bd93f9', like: '#ff79c6', retweet: '#50fa7b' },
   },
+  {
+    id: 'catppuccin-mocha', name: 'Catppuccin Mocha', scheme: 'dark',
+    colors: { bg: '#1e1e2e', text: '#cdd6f4', muted: '#9399b2', border: '#313244', accent: '#89b4fa', like: '#f38ba8', retweet: '#a6e3a1' },
+  },
+  {
+    id: 'catppuccin-latte', name: 'Catppuccin Latte', scheme: 'light',
+    colors: { bg: '#eff1f5', text: '#4c4f69', muted: '#6c6f85', border: '#ccd0da', accent: '#1e66f5', like: '#d20f39', retweet: '#40a02b' },
+  },
+  {
+    id: 'tokyo-night', name: 'Tokyo Night', scheme: 'dark',
+    colors: { bg: '#1a1b26', text: '#c0caf5', muted: '#7982a9', border: '#292e42', accent: '#7aa2f7', like: '#f7768e', retweet: '#9ece6a' },
+  },
+  {
+    id: 'gruvbox', name: 'Gruvbox', scheme: 'dark',
+    colors: { bg: '#282828', text: '#ebdbb2', muted: '#a89984', border: '#3c3836', accent: '#fabd2f', like: '#fb4934', retweet: '#b8bb26' },
+  },
+  {
+    id: 'solarized-dark', name: 'Solarized sombre', scheme: 'dark',
+    colors: { bg: '#002b36', text: '#93a1a1', muted: '#6c8288', border: '#0a4050', accent: '#268bd2', like: '#d33682', retweet: '#859900' },
+  },
+  {
+    id: 'solarized-light', name: 'Solarized clair', scheme: 'light',
+    colors: { bg: '#fdf6e3', text: '#586e75', muted: '#748387', border: '#eee8d5', accent: '#268bd2', like: '#d33682', retweet: '#859900' },
+  },
+  {
+    id: 'rose-pine', name: 'Rosé Pine', scheme: 'dark',
+    colors: { bg: '#191724', text: '#e0def4', muted: '#908caa', border: '#26233a', accent: '#c4a7e7', like: '#eb6f92', retweet: '#9ccfd8' },
+  },
+  {
+    id: 'one-dark', name: 'One Dark', scheme: 'dark',
+    colors: { bg: '#282c34', text: '#abb2bf', muted: '#7f848e', border: '#3e4451', accent: '#61afef', like: '#e06c75', retweet: '#98c379' },
+  },
+  {
+    id: 'monokai', name: 'Monokai', scheme: 'dark',
+    colors: { bg: '#272822', text: '#f8f8f2', muted: '#a59f85', border: '#3e3d32', accent: '#66d9ef', like: '#f92672', retweet: '#a6e22e' },
+  },
+  {
+    id: 'github-dark', name: 'GitHub sombre', scheme: 'dark',
+    colors: { bg: '#0d1117', text: '#e6edf3', muted: '#8d96a0', border: '#30363d', accent: '#4493f8', like: '#f85149', retweet: '#3fb950' },
+  },
 ]
 
 export const COLOR_LABELS: Record<keyof ThemeColors, string> = {

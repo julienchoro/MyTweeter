@@ -32,8 +32,10 @@ Champs obligatoires : `id`, `author { name, handle }`, `text`. Tout le reste est
 
 ## Thèmes
 
-Le bouton palette en haut à droite propose : Système (suit l'appareil), Sombre, Dim, Clair, Sépia, Nord,
-Dracula, et un thème **Perso** éditable (7 couleurs, partir d'un préréglage avec « Personnaliser »).
+Le bouton palette en haut à droite propose : Système (suit l'appareil), les thèmes de X (Sombre, Dim, Clair),
+Sépia, et les palettes de dev les plus connues (Nord, Dracula, Catppuccin Mocha / Latte, Tokyo Night, Gruvbox,
+Solarized sombre / clair, Rosé Pine, One Dark, Monokai, GitHub sombre), plus un thème **Perso** éditable
+(7 couleurs, partir d'un préréglage avec « Personnaliser »).
 Le choix est gardé dans le navigateur.
 
 Pour ajouter un préréglage, il suffit d'ajouter une entrée à `PRESETS` dans `src/lib/themes.ts` :
