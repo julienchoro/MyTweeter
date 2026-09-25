@@ -16,7 +16,7 @@ export function TweetCard({ card }: { card: Card }) {
     </>
   )
   return card.url ? (
-    <a className={`card card-${card.kind}`} href={card.url} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
+    <a className={`card card-${card.kind}`} href={card.url} target="_blank" rel="noreferrer">
       {content}
     </a>
   ) : (

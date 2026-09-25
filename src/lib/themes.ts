@@ -96,12 +96,16 @@ const KEY_CUSTOM = 'mytweeter-custom-theme'
 /** Variables résolues, relues par le script de index.html pour éviter un flash */
 const KEY_VARS = 'mytweeter-theme-vars'
 
-function load<T>(key: string, parse: (raw: string) => T, fallback: T): T {
+const COLOR_KEYS = Object.keys(COLOR_LABELS) as (keyof ThemeColors)[]
+const HEX = /^#[0-9a-f]{6}$/i
+/** Variables posées sur <html> par un thème, à retirer en mode Système */
+const THEME_PROPS = ['color-scheme', ...COLOR_KEYS.map((k) => `--${k}`), '--bg-hover', '--bg-subtle', '--bg-input', '--bg-topbar']
+
+function load(key: string): string | null {
   try {
-    const raw = localStorage.getItem(key)
-    return raw == null ? fallback : parse(raw)
+    return localStorage.getItem(key)
   } catch {
-    return fallback
+    return null // stockage indisponible (navigation privée…)
   }
 }
 
@@ -110,49 +114,85 @@ function save(key: string, value: string | null) {
     if (value == null) localStorage.removeItem(key)
     else localStorage.setItem(key, value)
   } catch {
-    // stockage indisponible (navigation privée…)
+    // ignoré
   }
+}
+
+export function isThemeId(id: string): boolean {
+  return id === 'system' || id === 'custom' || PRESETS.some((p) => p.id === id)
+}
+
+/** Relit le thème perso en gardant, couleur par couleur, les valeurs valides */
+export function parseCustom(raw: string | null, fallback: ThemeColors): ThemeColors {
+  let stored: Record<string, unknown> = {}
+  try {
+    const parsed: unknown = raw ? JSON.parse(raw) : {}
+    if (parsed && typeof parsed === 'object') stored = parsed as Record<string, unknown>
+  } catch {
+    // JSON corrompu : on repart du thème par défaut
+  }
+  const colors = { ...fallback }
+  for (const k of COLOR_KEYS) {
+    const v = stored[k]
+    if (typeof v === 'string' && HEX.test(v)) colors[k] = v.toLowerCase()
+  }
+  return colors
+}
+
+function rgb(hex: string): [number, number, number] {
+  const n = parseInt(hex.slice(1), 16)
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+}
+
+/** Mélange `amount` de la couleur `a` dans `b` (équivalent de color-mix, compatible partout) */
+export function mix(a: string, b: string, amount: number): string {
+  const [ca, cb] = [rgb(a), rgb(b)]
+  return '#' + ca.map((v, i) => Math.round(v * amount + cb[i] * (1 - amount)).toString(16).padStart(2, '0')).join('')
 }
 
 /** Clair ou sombre selon la luminance du fond, pour les contrôles natifs */
 export function schemeFor(bg: string): 'light' | 'dark' {
-  const n = parseInt(bg.slice(1), 16)
-  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+  const [r, g, b] = rgb(bg)
   return 0.299 * r + 0.587 * g + 0.114 * b > 140 ? 'light' : 'dark'
 }
 
-function resolve(id: ThemeId, custom: ThemeColors): { colors: ThemeColors; scheme: 'light' | 'dark' } | null {
-  if (id === 'custom') return { colors: custom, scheme: schemeFor(custom.bg) }
-  const preset = PRESETS.find((p) => p.id === id)
-  return preset ? { colors: preset.colors, scheme: preset.scheme } : null
-}
-
-function toVars(colors: ThemeColors, scheme: string): Record<string, string> {
+/** Toutes les variables CSS d'un thème, y compris les teintes dérivées du fond et du texte */
+export function themeVars(colors: ThemeColors, scheme: 'light' | 'dark'): Record<string, string> {
   const vars: Record<string, string> = { 'color-scheme': scheme }
-  for (const [k, v] of Object.entries(colors)) vars[`--${k}`] = v
+  for (const k of COLOR_KEYS) vars[`--${k}`] = colors[k]
+  const [r, g, b] = rgb(colors.bg)
+  vars['--bg-hover'] = mix(colors.text, colors.bg, 0.03)
+  vars['--bg-subtle'] = mix(colors.text, colors.bg, 0.06)
+  vars['--bg-input'] = mix(colors.text, colors.bg, 0.11)
+  vars['--bg-topbar'] = `rgb(${r} ${g} ${b} / 0.75)`
   return vars
 }
 
+function resolve(id: ThemeId, custom: ThemeColors): Record<string, string> | null {
+  if (id === 'custom') return themeVars(custom, schemeFor(custom.bg))
+  const preset = PRESETS.find((p) => p.id === id)
+  return preset ? themeVars(preset.colors, preset.scheme) : null
+}
+
+/** Le thème perso a-t-il été modifié (différent de tous les préréglages) ? */
+export function isEdited(custom: ThemeColors): boolean {
+  return !PRESETS.some((p) => COLOR_KEYS.every((k) => p.colors[k].toLowerCase() === custom[k].toLowerCase()))
+}
+
 export function useTheme() {
-  const [themeId, setThemeId] = useState<ThemeId>(() => load(KEY_THEME, (r) => r, 'system'))
-  const [custom, setCustom] = useState<ThemeColors>(() =>
-    load(KEY_CUSTOM, (r) => ({ ...PRESETS[1].colors, ...JSON.parse(r) }), PRESETS[1].colors),
-  )
+  const [themeId, setThemeId] = useState<ThemeId>(() => {
+    const stored = load(KEY_THEME)
+    return stored && isThemeId(stored) ? stored : 'system'
+  })
+  const [custom, setCustom] = useState<ThemeColors>(() => parseCustom(load(KEY_CUSTOM), PRESETS[1].colors))
 
   useEffect(() => {
     const root = document.documentElement
-    const resolved = resolve(themeId, custom)
-    for (const k of ['color-scheme', ...Object.keys(COLOR_LABELS).map((c) => `--${c}`)]) root.style.removeProperty(k)
-
-    if (!resolved) {
-      save(KEY_THEME, null)
-      save(KEY_VARS, null)
-      return
-    }
-    const vars = toVars(resolved.colors, resolved.scheme)
-    for (const [k, v] of Object.entries(vars)) root.style.setProperty(k, v)
-    save(KEY_THEME, themeId)
-    save(KEY_VARS, JSON.stringify(vars))
+    const vars = resolve(themeId, custom)
+    for (const k of THEME_PROPS) root.style.removeProperty(k)
+    if (vars) for (const [k, v] of Object.entries(vars)) root.style.setProperty(k, v)
+    save(KEY_THEME, vars ? themeId : null)
+    save(KEY_VARS, vars ? JSON.stringify(vars) : null)
   }, [themeId, custom])
 
   useEffect(() => save(KEY_CUSTOM, JSON.stringify(custom)), [custom])

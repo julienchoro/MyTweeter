@@ -9,7 +9,7 @@ export function TweetMedia({ media }: { media: Media[] }) {
       {items.map((m, i) => (
         <div
           key={i}
-          className="media-item"
+          className={`media-item${single && !m.aspectRatio ? ' no-ratio' : ''}`}
           style={single && m.aspectRatio ? { aspectRatio: String(m.aspectRatio) } : undefined}
         >
           {m.type === 'image' ? (

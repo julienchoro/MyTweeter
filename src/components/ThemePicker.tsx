@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { COLOR_LABELS, PRESETS, type ThemeColors, type ThemeId } from '../lib/themes'
+import { COLOR_LABELS, isEdited, PRESETS, useTheme, type ThemeColors } from '../lib/themes'
 import { PaletteIcon } from './Icons'
-
-interface Props {
-  themeId: ThemeId
-  setThemeId: (id: ThemeId) => void
-  custom: ThemeColors
-  setCustom: (c: ThemeColors) => void
-}
 
 function Swatch({ colors }: { colors: ThemeColors }) {
   return (
@@ -19,21 +12,23 @@ function Swatch({ colors }: { colors: ThemeColors }) {
   )
 }
 
-export function ThemePicker({ themeId, setThemeId, custom, setCustom }: Props) {
+// Le hook vit ici plutôt que dans App : changer une couleur ne re-rend que ce panneau
+export function ThemePicker() {
+  const { themeId, setThemeId, custom, setCustom } = useTheme()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
   // ferme le panneau au clic extérieur ou avec Échap
   useEffect(() => {
     if (!open) return
-    const onClick = (e: MouseEvent) => {
+    const onPointer = (e: PointerEvent) => {
       if (!ref.current?.contains(e.target as Node)) setOpen(false)
     }
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
-    document.addEventListener('mousedown', onClick)
+    document.addEventListener('pointerdown', onPointer)
     document.addEventListener('keydown', onKey)
     return () => {
-      document.removeEventListener('mousedown', onClick)
+      document.removeEventListener('pointerdown', onPointer)
       document.removeEventListener('keydown', onKey)
     }
   }, [open])
@@ -95,7 +90,14 @@ export function ThemePicker({ themeId, setThemeId, custom, setCustom }: Props) {
             </div>
           ) : (
             current && (
-              <button className="theme-customize" onClick={() => { setCustom(current.colors); setThemeId('custom') }}>
+              <button
+                className="theme-customize"
+                onClick={() => {
+                  if (isEdited(custom) && !window.confirm('Remplacer ton thème Perso actuel par une copie de ce thème ?')) return
+                  setCustom(current.colors)
+                  setThemeId('custom')
+                }}
+              >
                 Personnaliser à partir de « {current.name} »
               </button>
             )

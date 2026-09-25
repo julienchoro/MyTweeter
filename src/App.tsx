@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react'
 import { ThemePicker } from './components/ThemePicker'
 import { Tweet } from './components/Tweet'
 import { searchTweets } from './lib/search'
-import { useTheme } from './lib/themes'
 import type { Tweet as TweetData } from './types'
 import data from './data/tweets.json'
 
@@ -10,7 +9,6 @@ const tweets = data as TweetData[]
 
 export default function App() {
   const [query, setQuery] = useState('')
-  const theme = useTheme()
   const results = useMemo(() => searchTweets(tweets, query), [query])
 
   return (
@@ -28,7 +26,7 @@ export default function App() {
         <div className="count">
           {results.length} / {tweets.length} tweets
         </div>
-        <ThemePicker {...theme} />
+        <ThemePicker />
       </header>
       <main className="timeline">
         {results.map((t) => (

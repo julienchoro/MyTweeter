@@ -5,6 +5,7 @@ import { VerifiedBadge } from './Icons'
 export function TweetHeader({ tweet, compact }: { tweet: Tweet; compact?: boolean }) {
   const { author } = tweet
   const time = formatTime(tweet.createdAt, tweet.displayTime)
+  const fullDate = formatFullDate(tweet.createdAt)
   return (
     <div className={`tweet-header${compact ? ' compact' : ''}`}>
       <span className="name">{author.name}</span>
@@ -13,7 +14,7 @@ export function TweetHeader({ tweet, compact }: { tweet: Tweet; compact?: boolea
       {time && !tweet.isAd && (
         <>
           <span className="dot">·</span>
-          <time className="time" dateTime={tweet.createdAt} title={formatFullDate(tweet.createdAt)}>
+          <time className="time" dateTime={fullDate ? tweet.createdAt : undefined} title={fullDate}>
             {time}
           </time>
         </>

@@ -1,24 +1,22 @@
-import { useState, type ReactNode } from 'react'
+import { useMemo, useState } from 'react'
+import { tokenize, truncateTokens, type Token } from '../lib/linkify'
+import { graphemes } from '../lib/text'
 
-const TOKEN = /(https?:\/\/[^\s]+|@\w{1,15}|#[\p{L}\p{N}_]+|\b[\w-]+\.(?:py|md|log|ts|js|io|com|dev|ai)\b)/gu
+function linkLabel(url: string): string {
+  const shown = graphemes(url.replace(/^https?:\/\/(www\.)?/, ''))
+  return shown.length > 30 ? shown.slice(0, 29).join('') + '…' : shown.join('')
+}
 
-function linkify(text: string): ReactNode[] {
-  return text.split(TOKEN).map((part, i) => {
-    if (i % 2 === 0) return part
-    if (part.startsWith('@')) {
-      return <a key={i} className="link" href={`https://x.com/${part.slice(1)}`} target="_blank" rel="noreferrer">{part}</a>
-    }
-    if (part.startsWith('#')) {
-      return <a key={i} className="link" href={`https://x.com/hashtag/${part.slice(1)}`} target="_blank" rel="noreferrer">{part}</a>
-    }
-    const href = part.startsWith('http') ? part : `https://${part}`
-    const shown = part.replace(/^https?:\/\/(www\.)?/, '')
-    return (
-      <a key={i} className="link" href={href} target="_blank" rel="noreferrer">
-        {shown.length > 30 ? shown.slice(0, 29) + '…' : shown}
+function render(tokens: Token[]) {
+  return tokens.map((t, i) =>
+    t.type === 'text' ? (
+      t.value
+    ) : (
+      <a key={i} className="link" href={t.href} target="_blank" rel="noreferrer">
+        {t.type === 'url' ? linkLabel(t.value) : t.value}
       </a>
-    )
-  })
+    ),
+  )
 }
 
 interface Props {
@@ -30,22 +28,17 @@ interface Props {
 
 export function TweetText({ text, truncateAt = 280, className = 'tweet-text' }: Props) {
   const [expanded, setExpanded] = useState(false)
-  const tooLong = text.length > truncateAt
-  const shown = tooLong && !expanded ? text.slice(0, truncateAt).trimEnd() : text
+  const tokens = useMemo(() => tokenize(text), [text])
+  const short = useMemo(() => truncateTokens(tokens, truncateAt), [tokens, truncateAt])
+  const collapsed = short.truncated && !expanded
 
   return (
     <div className={className}>
-      {linkify(shown)}
-      {tooLong && !expanded && (
+      {render(collapsed ? short.tokens : tokens)}
+      {collapsed && (
         <>
           {' '}
-          <button
-            className="link see-more"
-            onClick={(e) => {
-              e.stopPropagation()
-              setExpanded(true)
-            }}
-          >
+          <button className="link see-more" onClick={() => setExpanded(true)}>
             Voir plus
           </button>
         </>
