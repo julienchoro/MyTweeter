@@ -1,0 +1,42 @@
+[
+  {
+    "id": "starmex-jev-opus",
+    "author": { "name": "starmex", "handle": "starmexxx", "verified": "blue" },
+    "displayTime": "16 h",
+    "text": "JEV + OPUS 5.5 + ONE ROUTER = A STACK THAT NEVER PAYS FOR A DECISION AGAIN\n\nthe whole idea of jev engineering: the model that decides is not the model that writes, and they were never supposed to be the same bill.\n\njev takes every yes, no, route and score\nopus 5.5 only wakes when something actually needs a sentence\none line decides which call goes where\n\nhere is what sits inside:\n\n- the router (the only thing that sees every call)\n> route.py - one call in, a typed verdict out, no model picked yet\n> policy.md - what is allowed to reach a paid model, what dies at jev\n> costs.log - every call priced live, so the meter is never a surprise\n\n- the decider · jev\n> 70ms a call, output billed at zero because it never writes a token\n> returns a typed value with a confidence score, not a paragraph to parse\n> 1,204,882 decisions today, 6 escalated, the rest closed right here\n\n- the writer · opus 5.5 and gpt-6 astra\n> only fires when jev flags \"this needs prose\" or \"confidence too low\"\n> the four-figure part of the bill, now touched a few times a day, not every call\n> same models, same quality, a rounding error of the volume\n\n- the ledger\n> append-only, every verdict timestamped and sourced\n> a wrong call is never rewritten, a new one lands on top and outvotes it\n> rebuild the whole index from the log in 8 seconds\n\n1,204,882 decisions in. 6 of them cost real money.\n\nhere is the part nobody prices out: a decision that never becomes a sentence cannot be wrong and cannot bill output, because there is no output. you were not paying opus for intelligence on those calls, you were paying it to write down an answer it already had.\n\nworth stealing even if you never drop opus: put jev in front of it. ninety-nine percent of your calls die before they reach the meter, and the invoice stops being a mystery.\n\nthe full jev engineering build is in the article below.",
+    "media": [{ "type": "image", "url": "/samples/decider.svg", "alt": "The Decider File — JEV + Opus 5.5 + one router", "aspectRatio": 0.9 }],
+    "quoted": {
+      "id": "avid-harness",
+      "author": { "name": "Avid", "handle": "Av1dlive", "verified": "blue" },
+      "displayTime": "1 j",
+      "text": "",
+      "card": {
+        "kind": "article",
+        "title": "How to Build Agentic Harness using Jev  (Builder's Guide)",
+        "description": "i'm going to walk you through how i built an agentic harness with jev, where i put the decision layer....step by step, with the code and diagrams behind each choice.",
+        "imageUrl": "/samples/harness.svg"
+      }
+    },
+    "metrics": { "replies": 18, "retweets": 12, "likes": 184, "views": 24900, "liked": true, "bookmarked": true },
+    "tags": ["jev", "llm-routing", "cost"]
+  },
+  {
+    "id": "howtoprompt-stair",
+    "author": { "name": "How To Prompt", "handle": "HowToPrompt__", "verified": "blue" },
+    "displayTime": "8 h",
+    "text": "IBM built a retriever that hallucinates 65x less than fine-tuned RAG systems.\n\nno vector database. no embeddings. no re-ranker.\n\nRight now, if you want an AI to read a massive document, you use Retrieval-Augmented Generation (RAG).\n\nBut standard RAG does something brutal. It takes a beautifully structured document and chops it into length-based chunks, throwing away the table of contents that makes it navigable.",
+    "media": [{ "type": "image", "url": "/samples/stair.svg", "alt": "STAIR (STructure Aware Information Retriever) paper — IBM", "aspectRatio": 1.28 }],
+    "communityNotes": true,
+    "metrics": { "replies": 17, "retweets": 29, "likes": 140, "views": 6600, "liked": true, "bookmarked": true },
+    "tags": ["rag", "paper", "ibm"]
+  },
+  {
+    "id": "swmansion-argent",
+    "author": { "name": "Software Mansion", "handle": "swmansion", "verified": "blue" },
+    "displayTime": "10 h",
+    "text": "We tested iOS simulators running in a virtual machine vs. on a real Mac 🧪\n\nOn long feed scrolls of shadowed elements, we consistently saw about ⅓ fewer frames in the VMs.\n\nThis shows the performance impact of compositing and laying out cells inside virtual machines. 📉",
+    "media": [{ "type": "image", "url": "/samples/argent.svg", "alt": "Argent", "aspectRatio": 1.76 }],
+    "metrics": { "replies": 2, "retweets": 8, "likes": 86, "views": 6000, "liked": true, "bookmarked": true },
+    "tags": ["ios", "performance"]
+  }
+]

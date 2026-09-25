@@ -1,0 +1,162 @@
+:root {
+  --bg: #000;
+  --bg-hover: #080808;
+  --border: #2f3336;
+  --text: #e7e9ea;
+  --muted: #71767b;
+  --blue: #1d9bf0;
+  --pink: #f91880;
+  --green: #00ba7c;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 20px;
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font: inherit; background: none; border: 0; padding: 0; color: inherit; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+
+/* ---- Layout ---- */
+.layout { max-width: 600px; margin: 0 auto; min-height: 100vh; border-inline: 1px solid var(--border); }
+
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center;
+  padding: 10px 16px;
+  background: rgb(0 0 0 / 0.65);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar h1 { font-size: 20px; margin: 0; font-weight: 800; }
+.search {
+  flex: 1; min-width: 180px;
+  background: #202327; color: var(--text);
+  border: 1px solid transparent; border-radius: 999px;
+  padding: 9px 16px; font: inherit; outline: none;
+}
+.search:focus { border-color: var(--blue); background: #000; }
+.count { color: var(--muted); font-size: 13px; }
+.empty { color: var(--muted); text-align: center; padding: 40px 16px; }
+
+/* ---- Tweet ---- */
+.tweet {
+  display: flex; gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.tweet:hover { background: var(--bg-hover); }
+.tweet-main { flex: 1; min-width: 0; }
+
+.avatar { border-radius: 50%; flex-shrink: 0; object-fit: cover; }
+.avatar-fallback { display: grid; place-items: center; color: #fff; font-weight: 700; }
+
+.tweet-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.tweet-header { display: flex; align-items: center; gap: 4px; min-width: 0; white-space: nowrap; flex: 1; }
+.tweet-header .name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+.tweet-header .handle, .tweet-header .dot, .tweet-header .time { color: var(--muted); }
+.tweet-header .handle { overflow: hidden; text-overflow: ellipsis; }
+.tweet-header .time { flex-shrink: 0; }
+.tweet-header .time:hover { text-decoration: underline; }
+.verified { flex-shrink: 0; }
+.ad-label { margin-left: auto; color: var(--muted); }
+.open-on-x { color: var(--text); opacity: 0.85; flex-shrink: 0; }
+.open-on-x:hover { opacity: 1; }
+
+.tweet-text { white-space: pre-wrap; overflow-wrap: anywhere; margin-top: 2px; }
+.link { color: var(--blue); }
+.link:hover { text-decoration: underline; }
+
+/* ---- Media ---- */
+.media-grid {
+  margin-top: 12px;
+  display: grid; gap: 2px;
+  border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+}
+.media-2 { grid-template-columns: 1fr 1fr; aspect-ratio: 16 / 9; }
+.media-3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; aspect-ratio: 16 / 9; }
+.media-3 .media-item:first-child { grid-row: span 2; }
+.media-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; aspect-ratio: 16 / 9; }
+.media-item { position: relative; min-height: 0; background: #16181c; }
+.media-item img, .media-item video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.media-1 .media-item { max-height: 510px; aspect-ratio: auto !important; }
+.media-1 .media-item img, .media-1 .media-item video { max-height: 510px; height: auto; }
+.media-badge {
+  position: absolute; left: 8px; bottom: 8px;
+  background: rgb(0 0 0 / 0.75); color: #fff;
+  font-size: 12px; font-weight: 700; padding: 0 4px; border-radius: 4px;
+}
+
+/* ---- Cards ---- */
+.card {
+  display: block; margin-top: 12px;
+  border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+}
+.card-image { position: relative; }
+.card-image img { display: block; width: 100%; aspect-ratio: 2.4; object-fit: cover; }
+.card-domain-badge {
+  position: absolute; left: 12px; bottom: 12px;
+  background: rgb(0 0 0 / 0.77); color: #fff; font-size: 13px; padding: 0 4px; border-radius: 4px;
+}
+.card-body { padding: 12px; }
+.card-title { font-weight: 700; }
+.card-description { margin-top: 2px; color: var(--text); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-article .card-image img { border-radius: 12px 12px 0 0; }
+
+/* Carte dans un tweet cité : pas de double bordure */
+.quoted .card { border: 0; border-radius: 12px; margin-top: 8px; }
+.quoted .card-image img { border-radius: 12px; }
+.quoted .card-body { padding: 12px 0 0; }
+
+/* ---- Quoted tweet ---- */
+.quoted {
+  margin-top: 12px;
+  border: 1px solid var(--border); border-radius: 16px;
+  padding: 12px;
+}
+.quoted-top { display: flex; align-items: center; gap: 4px; }
+.quoted .tweet-header { gap: 4px; }
+.quoted .media-grid { border-radius: 12px; }
+
+/* ---- Community notes / tags ---- */
+.community-notes {
+  display: flex; align-items: center; gap: 12px;
+  margin-top: 12px; padding: 12px 16px;
+  background: #16181c; border: 1px solid var(--border); border-radius: 12px;
+  font-weight: 700;
+}
+.community-notes svg { color: var(--blue); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tag { color: var(--blue); font-size: 13px; }
+.tag:hover { text-decoration: underline; }
+
+/* ---- Actions ---- */
+.actions {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 12px; max-width: 100%;
+  color: var(--muted); font-size: 13px;
+}
+.action { display: inline-flex; align-items: center; gap: 4px; min-width: 50px; }
+.action-group { display: inline-flex; gap: 16px; }
+.action-group .action { min-width: 0; }
+.action-reply:hover { color: var(--blue); }
+.action-retweet:hover { color: var(--green); }
+.action-like:hover, .action-like.active { color: var(--pink); }
+.action-views:hover { color: var(--blue); }
+.action-bookmark:hover, .action-bookmark.active { color: var(--blue); }
+.action-share:hover { color: var(--blue); }
+
+@media (max-width: 500px) {
+  .tweet { padding: 12px; gap: 8px; }
+  .action { min-width: 0; }
+}
