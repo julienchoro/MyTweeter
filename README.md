@@ -30,6 +30,15 @@ Champs obligatoires : `id`, `author { name, handle }`, `text`. Tout le reste est
 | `source` | URL du tweet, chemin du screenshot d'origine, date de sauvegarde |
 | `tags` | tags perso, cliquables pour filtrer |
 
+## Thèmes
+
+Le bouton palette en haut à droite propose : Système (suit l'appareil), Sombre, Dim, Clair, Sépia, Nord,
+Dracula, et un thème **Perso** éditable (7 couleurs, partir d'un préréglage avec « Personnaliser »).
+Le choix est gardé dans le navigateur.
+
+Pour ajouter un préréglage, il suffit d'ajouter une entrée à `PRESETS` dans `src/lib/themes.ts` :
+les autres teintes (survol, champs, fonds secondaires) sont dérivées automatiquement en CSS.
+
 ## Structure
 
 ```
@@ -38,10 +47,12 @@ src/
   data/tweets.json      tweets (exemples tirés de screenshots)
   lib/search.ts         recherche (texte, @auteur, #tag, tweet cité), insensible aux accents
   lib/format.ts         « 24,9k », « 8 h »…
+  lib/themes.ts         préréglages de thèmes + thème perso
   components/
     Tweet.tsx           tweet complet + tweet cité
     TweetText.tsx       liens, @mentions, #hashtags, « Voir plus »
     TweetMedia.tsx      grille de médias
     TweetCard.tsx       carte article / lien
     TweetActions.tsx    barre de métriques
+    ThemePicker.tsx     panneau de choix / édition du thème
 ```

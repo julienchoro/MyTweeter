@@ -8,8 +8,8 @@
     <script>
       // applique le thème sauvegardé avant le rendu, pour éviter un flash
       try {
-        var t = localStorage.getItem('mytweeter-theme')
-        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t)
+        var vars = JSON.parse(localStorage.getItem('mytweeter-theme-vars') || '{}')
+        for (var k in vars) document.documentElement.style.setProperty(k, vars[k])
       } catch (e) {}
     </script>
   </head>

@@ -1,42 +1,32 @@
-/* Thème sombre (par défaut) */
+/*
+ * Thèmes : seules les 7 couleurs de base changent d'un thème à l'autre
+ * (voir src/lib/themes.ts). Les autres teintes en sont dérivées.
+ * Ces valeurs servent au mode « Système » ; un thème choisi les remplace
+ * par des styles en ligne sur <html>.
+ */
 :root {
   --bg: #000;
-  --bg-hover: #080808;
-  --bg-topbar: rgb(0 0 0 / 0.65);
-  --bg-input: #202327;
-  --bg-subtle: #16181c;
-  --border: #2f3336;
   --text: #e7e9ea;
   --muted: #71767b;
-  --blue: #1d9bf0;
-  --pink: #f91880;
-  --green: #00ba7c;
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --border: #2f3336;
+  --accent: #1d9bf0;
+  --like: #f91880;
+  --retweet: #00ba7c;
   color-scheme: dark;
+
+  --bg-hover: color-mix(in srgb, var(--text) 3%, var(--bg));
+  --bg-subtle: color-mix(in srgb, var(--text) 6%, var(--bg));
+  --bg-input: color-mix(in srgb, var(--text) 11%, var(--bg));
+  --bg-topbar: color-mix(in srgb, var(--bg) 75%, transparent);
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Thème clair : choisi explicitement, ou suivi du système si aucun choix */
-:root[data-theme='light'] {
-  --bg: #fff;
-  --bg-hover: #f7f9f9;
-  --bg-topbar: rgb(255 255 255 / 0.85);
-  --bg-input: #eff3f4;
-  --bg-subtle: #f7f9f9;
-  --border: #eff3f4;
-  --text: #0f1419;
-  --muted: #536471;
-  color-scheme: light;
-}
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme]) {
+  :root {
     --bg: #fff;
-    --bg-hover: #f7f9f9;
-    --bg-topbar: rgb(255 255 255 / 0.85);
-    --bg-input: #eff3f4;
-    --bg-subtle: #f7f9f9;
-    --border: #eff3f4;
     --text: #0f1419;
     --muted: #536471;
+    --border: #eff3f4;
     color-scheme: light;
   }
 }
@@ -74,13 +64,49 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid transparent; border-radius: 999px;
   padding: 9px 16px; font: inherit; outline: none;
 }
-.search:focus { border-color: var(--blue); background: var(--bg); }
+.search:focus { border-color: var(--accent); background: var(--bg); }
 .count { color: var(--muted); font-size: 13px; }
 .theme-toggle {
   display: grid; place-items: center; width: 36px; height: 36px;
   border-radius: 50%; color: var(--text);
 }
 .theme-toggle:hover { background: var(--bg-input); }
+
+/* ---- Sélecteur de thème ---- */
+.theme-picker { position: relative; }
+.theme-panel {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 20;
+  width: min(320px, calc(100vw - 32px));
+  padding: 12px;
+  background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 16px;
+  box-shadow: 0 8px 28px rgb(0 0 0 / 0.35);
+}
+.theme-panel-title { font-weight: 800; font-size: 17px; margin-bottom: 10px; }
+.theme-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.theme-option {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px; border-radius: 10px;
+  border: 1px solid var(--border); text-align: left;
+}
+.theme-option:hover { background: var(--bg-hover); }
+.theme-option.selected { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.swatch {
+  display: inline-flex; align-items: center; justify-content: center; gap: 2px;
+  width: 34px; height: 22px; border-radius: 6px; border: 1px solid; flex-shrink: 0;
+}
+.swatch span { width: 6px; height: 6px; border-radius: 50%; }
+.swatch-system { background: linear-gradient(135deg, #fff 50%, #000 50%); border-color: #71767b; }
+.theme-customize { margin-top: 10px; color: var(--accent); font-size: 14px; }
+.theme-customize:hover { text-decoration: underline; }
+.theme-editor { margin-top: 12px; display: grid; gap: 6px; }
+.color-row { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.color-row input[type='color'] {
+  width: 32px; height: 26px; padding: 0; flex-shrink: 0;
+  border: 1px solid var(--border); border-radius: 6px; background: none; cursor: pointer;
+}
+.color-row span { flex: 1; }
+.color-row code { color: var(--muted); font-size: 12px; }
 .empty { color: var(--muted); text-align: center; padding: 40px 16px; }
 
 /* ---- Tweet ---- */
@@ -109,7 +135,7 @@ a { color: inherit; text-decoration: none; }
 .open-on-x:hover { opacity: 1; }
 
 .tweet-text { white-space: pre-wrap; overflow-wrap: anywhere; margin-top: 2px; }
-.link { color: var(--blue); }
+.link { color: var(--accent); }
 .link:hover { text-decoration: underline; }
 
 /* ---- Media ---- */
@@ -170,9 +196,9 @@ a { color: inherit; text-decoration: none; }
   background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 12px;
   font-weight: 700;
 }
-.community-notes svg { color: var(--blue); }
+.community-notes svg { color: var(--accent); }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.tag { color: var(--blue); font-size: 13px; }
+.tag { color: var(--accent); font-size: 13px; }
 .tag:hover { text-decoration: underline; }
 
 /* ---- Actions ---- */
@@ -184,12 +210,12 @@ a { color: inherit; text-decoration: none; }
 .action { display: inline-flex; align-items: center; gap: 4px; min-width: 50px; }
 .action-group { display: inline-flex; gap: 16px; }
 .action-group .action { min-width: 0; }
-.action-reply:hover { color: var(--blue); }
-.action-retweet:hover { color: var(--green); }
-.action-like:hover, .action-like.active { color: var(--pink); }
-.action-views:hover { color: var(--blue); }
-.action-bookmark:hover, .action-bookmark.active { color: var(--blue); }
-.action-share:hover { color: var(--blue); }
+.action-reply:hover { color: var(--accent); }
+.action-retweet:hover { color: var(--retweet); }
+.action-like:hover, .action-like.active { color: var(--like); }
+.action-views:hover { color: var(--accent); }
+.action-bookmark:hover, .action-bookmark.active { color: var(--accent); }
+.action-share:hover { color: var(--accent); }
 
 @media (max-width: 500px) {
   .tweet { padding: 12px; gap: 8px; }

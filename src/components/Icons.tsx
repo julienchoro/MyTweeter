@@ -65,22 +65,11 @@ export const VerifiedBadge = ({ kind = 'blue' }: { kind?: keyof typeof badgeColo
   </svg>
 )
 
-export const SunIcon = (p: P) => (
-  <svg {...base} {...p} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
-    <circle cx="12" cy="12" r="4" />
-    <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4" />
-  </svg>
-)
-
-export const MoonIcon = (p: P) => (
+export const PaletteIcon = (p: P) => (
   <svg {...base} {...p} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinejoin="round">
-    <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" />
-  </svg>
-)
-
-export const AutoThemeIcon = (p: P) => (
-  <svg {...base} {...p} fill="none" stroke="currentColor" strokeWidth={1.8}>
-    <circle cx="12" cy="12" r="8.5" />
-    <path d="M12 3.5a8.5 8.5 0 0 1 0 17Z" fill="currentColor" />
+    <path d="M12 3.5a8.5 8.5 0 0 0 0 17c1.2 0 1.8-.8 1.8-1.7 0-1.2-1-1.5-1-2.6 0-1 .8-1.7 1.8-1.7h2.2a3.7 3.7 0 0 0 3.7-3.7c0-4.2-3.8-7.3-8.5-7.3Z" />
+    <circle cx="7.8" cy="11" r="1.1" fill="currentColor" />
+    <circle cx="10.5" cy="7.4" r="1.1" fill="currentColor" />
+    <circle cx="15" cy="7.8" r="1.1" fill="currentColor" />
   </svg>
 )
